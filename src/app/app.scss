@@ -1,6 +1,4 @@
 // http://ionicframework.com/docs/theming/
-
-
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
@@ -14,3 +12,123 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+body {
+  --base-color: #a955fc;
+  --white-color: #FFFFFF;
+  --gray-color: #a1a1a1;
+  --secondary-color: #242424;
+  --third-color: #1b1b1b;
+  background-color: var(--secondary-color);
+}
+
+ion-content {
+  background-color: var(--secondary-color) !important;
+  color: var(--white-color) !important;
+}
+
+.scroll-content {
+  padding: 0px !important;
+}
+
+.toolbar-background-md {
+  background-color: var(--base-color) !important;
+}
+
+.toolbar-title-md {
+  color: var(--white-color) !important;
+}
+
+.tabs-md .tabbar {
+  background-color: var(--base-color) !important;
+}
+
+.tabs-md .tab-button[aria-selected=true] {
+  color: var(--white-color);
+  padding: 0;
+}
+
+.tabs-md .tab-button[aria-selected=true] .tab-button-icon {
+  color: var(--white-color);
+}
+
+h1 {
+  color: var(--white-color);
+}
+
+h2 {
+  color: var(--white-color);
+}
+
+h3 {
+  color: var(--white-color);
+}
+
+h4 {
+  color: var(--white-color);
+}
+
+h5 {
+  color: var(--white-color);
+}
+
+h6 {
+  color: var(--white-color);
+}
+
+h7 {
+  color: var(--white-color);
+}
+
+#balanceShow {
+  background-color: var(--base-color) !important;
+  height: 70px;
+}
+
+#transactionShow {
+  height: calc(100% - 70px);
+}
+
+.hugeCenterText {
+  text-align: center;
+  font-size: 28px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.item-md {
+  background-color: var(--third-color);
+  color: var(--white-color);
+  margin-bottom: 3px;
+}
+
+.list-md .item-block .item-inner {
+  border-bottom: 0px;
+}
+
+.horizontal {
+  display: flex;
+}
+
+.vertical {
+  display: flex;
+  flex-direction: column;
+}
+
+.transactionInfo {
+  width: 60%;
+}
+
+.transactionAmount {
+  width: 40%;
+  transform: translateY(20%);
+}
+
+.transactionInfoDate {
+  color: var(--gray-color);
+  font-size: 0.7em;
+}
+
+.transactionInfoType {
+  text-transform: uppercase;
+}

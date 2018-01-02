@@ -1,31 +1,68 @@
 <ion-content padding>
-  <div id="balanceShow">
-    <div class="hugeCenterText">
-      <span *ngIf="wallet != null">{{wallet.balance}}</span> DSR
+  <div *ngIf="wallet != null">
+    <div id="balanceShow">
+      <div class="hugeCenterText">
+        <span>{{wallet.balance}}</span> DSR
+      </div>
     </div>
-  </div>
-  <div id="transactionShow">
-    <ion-list>
-      <ion-item>
-        <div class="horizontal">
-          <div class="transactionInfo">
-            <div class="vertical">
-              <div class="transactionInfoDate">
-                October 12
+
+    <div id="transactionShow" *ngIf="wallet.histories != null">
+
+      <div style="padding: 10px !important; text-align: center;">
+        No trade history in beta version available
+        <button no-margin ion-button color="purple" style="width: 100%;" outline (click)="openUrl()">Open in Blockchain</button>
+      </div>
+      <ion-list>
+        <ion-item class="item-md-addpadding" *ngFor="let history of wallet.histories | sortgrid: '-timestamp'">
+          <div class="horizontal">
+            <div class="transactionInfo">
+              <div class="vertical">
+                <div class="transactionInfoDate">
+                  {{ history.timestamp | date : "medium" }}
+                </div>
+                <div class="transactionInfoType">
+                  {{history.type}}
+                </div>
               </div>
-              <div class="transactionInfoType">
-                Received
+            </div>
+
+
+            <div class="transactionAmount">
+              <div class="vertical">
+                <div class="transactionConfirmations">
+                  confirmations: {{ history.confirmations }}
+                </div>
+                <div class="transactionAmountInner">
+                  {{history.value}} DSR
+                </div>
               </div>
             </div>
           </div>
-          <div class="transactionAmount">
-            0.00013482 DSR
+        </ion-item>
+        <!--
+        <ion-item>
+          <div class="horizontal">
+            <div class="transactionInfo">
+              <div class="vertical">
+                <div class="transactionInfoDate">
+                  October 12
+                </div>
+                <div class="transactionInfoType">
+                  Received
+                </div>
+              </div>
+            </div>
+            <div class="transactionAmount">
+              0.00013482 DSR
+            </div>
           </div>
-        </div>
-      </ion-item>
-    </ion-list>
-
+        </ion-item>
+      -->
+      </ion-list>
+    </div>
   </div>
+
+
 
 
 </ion-content>

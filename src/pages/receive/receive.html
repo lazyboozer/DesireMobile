@@ -1,16 +1,32 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Receive
+      Request
     </ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <div id="QRSHOW">
+<ion-content padding overflow-scroll="false" style="overflow-y: hidden;">
+  <div id="QRSHOW" (click)="copyAddress(this.wallet.keys.public)">
+    Tap to copy this address.
     <canvas id="receiveqr"></canvas>
-    <div id="receiveaddress">{{this.receiveAddress}}</div>
+    <div id="receiveaddress">{{this.wallet.keys.public}}</div>
   </div>
+
+  <div id="shakeWhenError" class="animated">
+    <ion-label color="primary" stacked style="padding-left: 5px;">Amount - DSR</ion-label>
+    <ion-item>
+      <ion-input type="number" min="0.00000001" step="0.00000001" placeholder="0.00000000" [(ngModel)]="amount"></ion-input>
+    </ion-item>
+  </div>
+
+
+
+  <div class="buttonFixedWrapper" style="padding: 10px !important">
+    <button no-margin ion-button color="purple" style="width: 100%;" outline (click)="openRequestQR()">Generate QR code with amount</button>
+  </div>
+
+
 
 
 </ion-content>

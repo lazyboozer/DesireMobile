@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons left>
+      <button ion-button icon-only (click)="dismiss()">
+        <ion-icon name="arrow-back"></ion-icon> Close
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding overflow-scroll="false" style="overflow-y: hidden;">
+  <div style="width: 100%; text-align: center; margin-top: 15px;">
+    Check your payment information before sending!
+  </div>
+
+  <div style="margin-left: 15px">
+    <ion-label color="primary" stacked style="padding-left: 5px;">Address</ion-label>
+    {{this.payToAddress}}
+    <ion-label color="primary" stacked style="padding-left: 5px;">Amount</ion-label>
+    {{this.payToAmount}} DSR
+    <ion-label color="primary" stacked style="padding-left: 5px;">Fee</ion-label>
+    {{this.payToFee}} DSR
+    <ion-label color="primary" stacked style="padding-left: 5px;">Summary</ion-label>
+    {{this.payToSummary}} DSR
+    <ion-label color="primary" stacked style="padding-left: 5px;">Transaction Size</ion-label>
+    {{this.transactionSize*1000}} Byte
+  </div>
+
+  <div class="errorWrapper">
+    <span id="errorText2"></span>
+  </div>
+
+  <div class="buttonFixedWrapper" style="padding: 10px !important">
+    <button no-margin ion-button color="purple" style="width: 100%;" outline (click)="gotoSendConfirmation()">Send</button>
+  </div>
+
+
+</ion-content>

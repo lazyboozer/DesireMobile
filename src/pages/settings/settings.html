@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Settings
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding overflow-scroll="false" style="overflow-y: hidden;">
+  <ion-list>
+    <ion-list-header>
+      App
+    </ion-list-header>
+    <!-- ToDo
+    <ion-item class="item-md-addpadding" >
+      <ion-label>White Theme</ion-label>
+      <ion-toggle class="purpleToggle" checked="false"></ion-toggle>
+    </ion-item>
+  -->
+    <button class="item-md-addpadding" ion-item style="width: 99%" disabled>Reset Trade History Cache
+    </button>
+    <ion-list-header>
+      Wallet
+    </ion-list-header>
+    <button class="item-md-addpadding" ion-item style="width: 99%" (click)="showKeys()">Show Private Address
+    </button>
+    <button class="item-md-addpadding" ion-item style="width: 99%" disabled>Import Private Address
+    </button>
+
+  </ion-list>
+
+
+
+
+
+</ion-content>

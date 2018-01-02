@@ -3,40 +3,66 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
-import { ReceivePage } from '../pages/receive/receive';
-import { ContactPage } from '../pages/contact/contact';
+import { ReceivePage, RequestShowQR } from '../pages/receive/receive';
+import { ScanPage } from '../pages/scan/scan';
 import { HomePage } from '../pages/home/home';
+import { SendPage, SendConfimrationPage } from '../pages/send/send';
+import { SettingsPage } from '../pages/settings/settings';
 import { TabsPage } from '../pages/tabs/tabs';
+
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { walletService } from './walletService';
+import { HttpModule } from '@angular/http';
+import { ElectrumClientService } from './electrum-client-service';
+import { TCPServices } from '../../src/app/TCPServices';
+import { SortGridPipe } from '../../src/app/SortGridPipe';
+import { IonicStorageModule } from '@ionic/storage';
+import { Storage } from '@ionic/storage';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+
 
 @NgModule({
   declarations: [
     MyApp,
     ReceivePage,
-    ContactPage,
+    RequestShowQR,
+    ScanPage,
     HomePage,
-    TabsPage
+    SendPage,
+    SendConfimrationPage,
+    SettingsPage,
+    TabsPage,
+    SortGridPipe
   ],
   imports: [
     BrowserModule,
+    HttpModule,
+    IonicStorageModule.forRoot(),
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     ReceivePage,
-    ContactPage,
+    RequestShowQR,
+    ScanPage,
     HomePage,
+    SendPage,
+    SendConfimrationPage,
+    SettingsPage,
     TabsPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     walletService,
+    ElectrumClientService,
+    TCPServices,
+    SortGridPipe,
+    BarcodeScanner,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

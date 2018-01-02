@@ -12,13 +12,79 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+@import "./animate";
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+input {
+  font-size: 0.85em;
+}
+
 body {
   --base-color: #a955fc;
+  --base-light-color: #c78fff;
   --white-color: #FFFFFF;
   --gray-color: #a1a1a1;
   --secondary-color: #242424;
   --third-color: #1b1b1b;
   background-color: var(--secondary-color);
+}
+
+.loading-md .spinner-crescent circle {
+  stroke: var(--base-color);
+}
+
+.loading-md .loading-wrapper {
+  background: var(--secondary-color);
+  color: var(--white-color);
+}
+
+.alert-md .alert-wrapper {
+  background-color: var(--secondary-color);
+  height: 300px;
+}
+
+.alert-md .alert-button {
+  color: var(--base-color);
+}
+
+.alert-md .alert-message,
+.alert-md .alert-input-group {
+  color: var(--white-color);
+}
+
+.item-md.item-input.ng-valid.item-input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner,
+.item-md.item-input.ng-valid.input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner {
+  box-shadow: inset 0 -1px 0 0 var(--base-color);
+}
+
+.item-md.item-input.item-input-has-focus .item-inner,
+.item-md.item-input.input-has-focus .item-inner {
+  box-shadow: inset 0 -1px 0 0 var(--white-color);
+}
+
+.label-md-primary,
+.item-input .label-md-primary,
+.item-select .label-md-primary,
+.item-datetime .label-md-primary {
+  color: var(--base-color);
+}
+
+.item-md.item-block .item-inner {
+  border-bottom: 0px;
+  border-top: 0px;
+}
+
+.label-ios-primary,
+.item-input .label-ios-primary,
+.item-select .label-ios-primary,
+.item-datetime .label-ios-primary {
+  color: var(--base-color);
 }
 
 ion-content {
@@ -96,14 +162,34 @@ h7 {
   transform: translateY(-50%);
 }
 
+.smallCenterText {
+  text-align: center;
+  font-size: 14px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .item-md {
   background-color: var(--third-color);
   color: var(--white-color);
   margin-bottom: 3px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.item-md-addpadding {
+  padding-left: 16px;
+}
+
+.item-md.list-header-md {
+  background: rgba(0, 0, 0, 0);
+  border-top: 0px;
 }
 
 .list-md .item-block .item-inner {
   border-bottom: 0px;
+  border-top: 0px;
 }
 
 .horizontal {
@@ -116,12 +202,22 @@ h7 {
 }
 
 .transactionInfo {
-  width: 60%;
+  width: 0%;
 }
 
 .transactionAmount {
-  width: 40%;
+  width: 100%;
   transform: translateY(20%);
+  margin-left: auto;
+  margin-right: auto;
+  text-align: right;
+  white-space: nowrap;
+  overflow: visible
+}
+
+.transactionAmountInner {
+  float: right;
+  transform: translateX(-1px);
 }
 
 .transactionInfoDate {
@@ -129,6 +225,28 @@ h7 {
   font-size: 0.7em;
 }
 
+.transactionConfirmations {
+  color: var(--gray-color);
+  font-size: 0.5em;
+}
+
 .transactionInfoType {
   text-transform: uppercase;
+}
+
+.purpleToggle:checked {
+  background-color: #1b1b1b;
+}
+
+//for the toggle Pin
+.toggle-md.toggle-checked .toggle-inner {
+  background-color: var(--base-color); // Whatever color you want
+}
+
+.purpleToggle.toggle-md.toggle-checked .toggle-icon {
+  background-color: var(--base-light-color);
+}
+
+.purpleToggle.toggle-ios.toggle-checked .toggle-icon {
+  background-color: var(--base-light-color);
 }

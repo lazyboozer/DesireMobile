@@ -5,6 +5,7 @@ import { LoadingController } from 'ionic-angular';
 import * as WAValidator from "wallet-address-validator";
 import * as QRCode from 'qrcode';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { Storage } from '@ionic/storage';
 
 declare var parseInt;
 @Component({
@@ -66,7 +67,7 @@ export class SendPage {
               if (e.success) {
                 this.wallet.make_transaction(this.payToAddress, this.decimalToFullNumber(this.payToAmount), this.decimalToFullNumber(this.payToFee * e.result.size * 0.001), (ex) => {
                   if (ex.success) {
-                    let profileModal = this.modalCtrl.create(SendConfimrationPage, { payToAddress: this.payToAddress, payToAmount: this.payToAmount, payToFee: this.payToFee * ex.result.size * 0.001, txraw: ex.result.rawtx, size: ex.result.size });
+                    let profileModal = this.modalCtrl.create(SendConfimrationPage, { payToAddress: this.payToAddress, payToAmount: this.payToAmount, payToFee: this.payToFee * ex.result.size * 0.001, txraw: ex.result.rawtx, size: ex.result.size, unspentList: ex.result.unspentList });
                     profileModal.present();
                     loading.dismiss();
                   } else {
@@ -120,8 +121,9 @@ export class SendConfimrationPage {
   public payToFee = "";
   public payToSummary = "";
   public transactionSize = 0;
-  private transactionRaw = "";;
-  constructor(params: NavParams, public viewCtrl: ViewController, public wallet: walletService, public loadingCtrl: LoadingController) {
+  private transactionRaw = "";
+  private listunspent = [];
+  constructor(params: NavParams, public viewCtrl: ViewController, private storage: Storage, public wallet: walletService, public loadingCtrl: LoadingController) {
     this.payToAddress = params.get("payToAddress");
     this.payToAmount = (+params.get("payToAmount")).toFixed(8);
     this.payToFee = (+params.get("payToFee")).toFixed(8);
@@ -132,6 +134,10 @@ export class SendConfimrationPage {
     this.transactionSize = this.transactionSize * 0.001;
 
     this.payToSummary = ((+params.get("payToAmount")) + (+params.get("payToFee"))).toFixed(8);
+
+    this.listunspent = params.get("unspentList");
+
+    console.log(this.listunspent);
   }
 
   ionViewDidLoad() {
@@ -153,11 +159,31 @@ export class SendConfimrationPage {
       console.log(ex);
       if (ex.indexOf("The") !== -1) {
         errorElement.innerHTML = "Transaction couldn't send:<br><br>" + ex.split("[")[0].replace("(", "<br>(");
+        loading.dismiss();
       } else {
-        this.wallet.update_balance();
-        this.dismiss();
+        this.storage.get("listspended_temp").then((list) => {
+          console.log(list);
+          if (list == null) {
+            list = [];
+          }
+          console.log(list);
+
+          for (var i = 0; i < this.listunspent.length; i++) {
+            var hash = this.listunspent[i].tx_hash;
+            if (list.indexOf(hash) == -1) {
+              list.push(hash);
+            }
+          }
+          this.storage.set("listspended_temp", list);
+
+          this.wallet.update_balance();
+          this.dismiss();
+          loading.dismiss();
+        });
+
+
+
       }
-      loading.dismiss();
     });
   }
 

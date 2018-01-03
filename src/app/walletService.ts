@@ -31,12 +31,17 @@ export class walletService {
           this.create_wallet();
         } else {
           this.keys.private = priv;
-          this.keys.public = pub;
+          this.keys.public = pub //DSLdCa24CXi47xdLrf8Z1X4UiBUbuJb9mt;
         }
+
         this.update_balance();
         setInterval(() => {
           this.update_balance();
         }, 20000);
+
+        this.wallet.blockchainAddress_listunspent(this.keys.public, (e) => {
+          console.log(e);
+        })
 
         // this.update_history();
 
@@ -71,54 +76,64 @@ export class walletService {
 
     //tx_hash = "3f4008151d518a8cf3eb933540b90ec346a5c4ec0153dac405631b5412fa2109"
     //address = "DDFAzWxfUALtmfgh8oeCVcTDV3o24VdVgt"
-    this.wallet.blockchainAddress_listunspent(this.keys.public, (e) => {
-      console.log(e);
-      if (e.result != null) {
-        var unspents = e.result;
-        var inputsList = [];
-        var inputVolume = 0;
-        var tx_size = 0;
-        for (var i = 0; i < unspents.length; i++) {
-          var unspent = unspents[i];
-          console.log(unspent);
-          if ((amount + fee) > inputVolume) {
-            // if (!check(inputsList, unspent.tx_hash)) {
-            inputsList.push(unspent);
-            console.log("!");
-            //}
-            inputVolume += unspent.value;
-          } else break;
-        }
-
-        if (amount + fee <= inputVolume) {
-          var inputListsNumber = [];
-
-          for (var i = 0; i < inputsList.length; i++) {
-            txb.addInput(inputsList[i].tx_hash, inputsList[i].tx_pos);
-
-            if (inputListsNumber.indexOf(inputsList[i].tx_pos) == -1) {
-              inputListsNumber.push(inputsList[i].tx_pos);
-            }
-          }
-
-          txb.addOutput(address, amount);
-          txb.addOutput(this.keys.public, inputVolume - amount - fee);
-
-          for (var i = 0; i < inputsList.length; i++) {
-            txb.sign(i, transaction);
-          }
-
-          console.log(inputsList);
-          var rawtx = txb.build().toHex();
-          tx_size = rawtx.length * 0.5;
-          callback({ success: 1, message: "", result: { rawtx: rawtx, size: tx_size } });
-          return rawtx;
-        } else {
-          callback({ success: 0, message: "Not enough balance" });
-        }
-
+    this.storage.get("listspended_temp").then((list) => {
+      if (list == null) {
+        list = [];
       }
-    })
+      this.wallet.blockchainAddress_listunspent(this.keys.public, (e) => {
+        console.log(e);
+        if (e.result != null) {
+          var unspents = e.result;
+          var inputsList = [];
+          var inputVolume = 0;
+          var tx_size = 0;
+          for (var i = 0; i < unspents.length; i++) {
+            var unspent = unspents[i];
+            if (list.indexOf(unspent.tx_hash) == -1) {
+              console.log(unspent);
+              if ((amount + fee) > inputVolume) {
+                // if (!check(inputsList, unspent.tx_hash)) {
+                inputsList.push(unspent);
+                console.log("!");
+                //}
+                inputVolume += unspent.value;
+              } else break;
+            } else {
+              console.log("Use other input because this input is reserved");
+            }
+
+          }
+
+          if (amount + fee <= inputVolume) {
+            var inputListsNumber = [];
+
+            for (var i = 0; i < inputsList.length; i++) {
+              txb.addInput(inputsList[i].tx_hash, inputsList[i].tx_pos);
+
+              if (inputListsNumber.indexOf(inputsList[i].tx_pos) == -1) {
+                inputListsNumber.push(inputsList[i].tx_pos);
+              }
+            }
+
+            txb.addOutput(address, amount);
+            txb.addOutput(this.keys.public, inputVolume - amount - fee);
+
+            for (var i = 0; i < inputsList.length; i++) {
+              txb.sign(i, transaction);
+            }
+
+            console.log(inputsList);
+            var rawtx = txb.build().toHex();
+            tx_size = rawtx.length * 0.5;
+            callback({ success: 1, message: "", result: { rawtx: rawtx, size: tx_size, unspentList: inputsList } });
+            return rawtx;
+          } else {
+            callback({ success: 0, message: "Not enough balance" });
+          }
+
+        }
+      })
+    });
 
     function check(arr, txhash) {
       var found = false;

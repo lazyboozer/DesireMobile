@@ -3,19 +3,26 @@ import { NavController } from 'ionic-angular';
 import { AlertController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
+import { walletService } from '../../../src/app/walletService';
 import * as QRCode from 'qrcode';
+import { ToastController } from 'ionic-angular';
 
 @Component({
   selector: 'page-settings',
   templateUrl: 'settings.html'
 })
 export class SettingsPage {
-  constructor(public navCtrl: NavController, private alertCtrl: AlertController, private storage: Storage) {
+  constructor(private toastCtrl: ToastController, public navCtrl: NavController, private alertCtrl: AlertController, public wallet: walletService, private storage: Storage) {
 
   }
 
   ionViewDidLoad() {
 
+  }
+
+  public updateCurrency() {
+    this.wallet.updateConvertPrice();
+    this.storage.set("CurrencySymbol", this.wallet.convertCurrencySymbol);
   }
 
   showKeys() {
@@ -29,5 +36,15 @@ export class SettingsPage {
         alert.present();
       });
     });
+  }
+
+  clearCache() {
+    this.storage.remove("listspended_temp");
+    let toast = this.toastCtrl.create({
+      message: "Cache cleared",
+      duration: 2000,
+      position: 'top'
+    })
+    toast.present();
   }
 }

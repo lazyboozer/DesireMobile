@@ -2,6 +2,7 @@ import * as desire from "bitcoinjs-lib";
 
 import { Injectable } from "@angular/core";
 import { Storage } from '@ionic/storage';
+import { Http, Headers, RequestOptions } from '@angular/http';
 
 
 import { ElectrumClientService } from "../../src/app/electrum-client-service"
@@ -14,6 +15,9 @@ export class walletService {
     public: ""
   }
   public balance = null;
+  public convertCurrency = null;
+  public convertCurrencySymbol = "USD";
+
   public balance_unconfirmed = null;
   public histories = [];
   public confirmation = 0;
@@ -21,7 +25,7 @@ export class walletService {
   private network;
   private ecpair;
 
-  constructor(public wallet: ElectrumClientService, private storage: Storage) {
+  constructor(public wallet: ElectrumClientService, private storage: Storage, public http: Http) {
     this.network = desire.networks.desire;
 
     storage.get("privKey").then((priv) => {
@@ -35,17 +39,51 @@ export class walletService {
         }
 
         this.update_balance();
+
         setInterval(() => {
           this.update_balance();
+          this.updateConvertPrice();
         }, 20000);
 
         this.wallet.blockchainAddress_listunspent(this.keys.public, (e) => {
           console.log(e);
         })
 
+        storage.get("CurrencySymbol").then(symbol => {
+          if (symbol != null) {
+            this.convertCurrencySymbol = symbol;
+          }
+          this.updateConvertPrice();
+        })
+
         // this.update_history();
 
       });
+    })
+  }
+
+  public updateConvertPrice() {
+    this.convertCurrency = null;
+    var headers = new Headers();
+    headers.append("Accept", 'application/json');
+    headers.append('Content-Type', 'application/json');
+    headers.append("Access-Control-Allow-Origin", "*");
+    let options = new RequestOptions({ headers: headers });
+    var url = "";
+    if (!document.URL.startsWith('file:///')) {
+      url = "http://localhost:8100/convertPrice"
+    } else {
+      url = "https://api.coinmarketcap.com/v1/ticker/desire/";
+    }
+
+    url += "?convert=";
+
+
+    this.http.get(url + this.convertCurrencySymbol, options).subscribe(data => {
+      var result: any;
+      result = data;
+      result = JSON.parse(result._body)[0];
+      this.convertCurrency = result["price_" + this.convertCurrencySymbol.toLowerCase()];
     })
   }
 

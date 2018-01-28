@@ -39,6 +39,7 @@ export class ElectrumClientService {
       url = "http://desire.thecryptochat.net/api_fetch.php";
     }
 
+
     var methodUri = "?method=" + method;
     var params = "";
     if (data != null) {

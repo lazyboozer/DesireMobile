@@ -24,4 +24,8 @@ export class HomePage {
     });
   }
 
+  public getConvertedCurrency() {
+    return (this.wallet.balance * this.wallet.convertCurrency).toFixed(2);
+  }
+
 }

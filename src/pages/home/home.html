@@ -2,7 +2,16 @@
   <div *ngIf="wallet != null">
     <div id="balanceShow">
       <div class="hugeCenterText">
-        <span>{{wallet.balance}}</span> DSR
+        <div class="vertical">
+          <span>
+            <span>{{wallet.balance}}</span> DSR
+          </span>
+          <span style="font-size: 0.5em; padding:0px; margin: 0px;">
+            <span>{{getConvertedCurrency()}}</span> {{wallet.convertCurrencySymbol}}</span>
+
+        </div>
+
+
       </div>
     </div>
 

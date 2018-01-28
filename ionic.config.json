@@ -8,5 +8,8 @@
   "proxies": [{
     "path": "/blockchain",
     "proxyUrl": "http://desire.thecryptochat.net/api_fetch.php"
+  }, {
+    "path": "/convertPrice",
+    "proxyUrl": "https://api.coinmarketcap.com/v1/ticker/desire/"
   }]
 }

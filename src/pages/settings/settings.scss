@@ -10,3 +10,19 @@ page-about {}
   bottom: 0;
   transform: translateY(-60px);
 }
+
+.alert-md .alert-radio-label {
+  color: white;
+}
+
+.alert-md [aria-checked=true] .alert-radio-icon {
+  border-color: var(--base-color);
+}
+
+.alert-md .alert-radio-inner {
+  background-color: var(--base-color);
+}
+
+.alert-md [aria-checked=true] .alert-radio-label {
+  color: var(--base-color);
+}

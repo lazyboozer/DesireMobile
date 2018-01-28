@@ -123,7 +123,7 @@ export class SendConfimrationPage {
   public transactionSize = 0;
   private transactionRaw = "";
   private listunspent = [];
-  constructor(params: NavParams, public viewCtrl: ViewController, private storage: Storage, public wallet: walletService, public loadingCtrl: LoadingController) {
+  constructor(private toastCtrl: ToastController, params: NavParams, public viewCtrl: ViewController, private storage: Storage, public wallet: walletService, public loadingCtrl: LoadingController) {
     this.payToAddress = params.get("payToAddress");
     this.payToAmount = (+params.get("payToAmount")).toFixed(8);
     this.payToFee = (+params.get("payToFee")).toFixed(8);
@@ -161,6 +161,14 @@ export class SendConfimrationPage {
         errorElement.innerHTML = "Transaction couldn't send:<br><br>" + ex.split("[")[0].replace("(", "<br>(");
         loading.dismiss();
       } else {
+
+        let toast = this.toastCtrl.create({
+          message: "Desire sent",
+          duration: 3000,
+          position: 'top'
+        })
+        toast.present();
+
         this.storage.get("listspended_temp").then((list) => {
           console.log(list);
           if (list == null) {

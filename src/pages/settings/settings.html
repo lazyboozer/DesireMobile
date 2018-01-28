@@ -17,15 +17,24 @@
       <ion-toggle class="purpleToggle" checked="false"></ion-toggle>
     </ion-item>
   -->
-    <button class="item-md-addpadding" ion-item style="width: 99%" disabled>Reset Trade History Cache
-    </button>
+    <button class="item-md-addpadding" ion-item style="width: 99%" (click)="clearCache()">Clear Cache</button>
     <ion-list-header>
       Wallet
     </ion-list-header>
+    <ion-item class="item-md-addpadding">
+      <ion-label style="color: white;">Convert Currency</ion-label>
+      <ion-select [(ngModel)]="wallet.convertCurrencySymbol" (ionChange)="updateCurrency()" multiple="false">
+        <ion-option value="EUR">EUR</ion-option>
+        <ion-option value="USD">USD</ion-option>
+        <ion-option value="RUB">RUB</ion-option>
+        <ion-option value="BTC">BTC</ion-option>
+      </ion-select>
+    </ion-item>
     <button class="item-md-addpadding" ion-item style="width: 99%" (click)="showKeys()">Show Private Address
     </button>
     <button class="item-md-addpadding" ion-item style="width: 99%" disabled>Import Private Address
     </button>
+
 
   </ion-list>
 

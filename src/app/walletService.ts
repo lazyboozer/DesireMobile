@@ -30,7 +30,7 @@ export class walletService {
 
     storage.get("privKey").then((priv) => {
       storage.get("pubKey").then((pub) => {
-
+        console.log(priv);
         if (priv == null || pub == null) {
           this.create_wallet();
         } else {
@@ -43,6 +43,7 @@ export class walletService {
         setInterval(() => {
           this.update_balance();
           this.updateConvertPrice();
+          this.update_history();
         }, 20000);
 
         this.wallet.blockchainAddress_listunspent(this.keys.public, (e) => {
@@ -56,7 +57,7 @@ export class walletService {
           this.updateConvertPrice();
         })
 
-        // this.update_history();
+        this.update_history();
 
       });
     })
@@ -88,13 +89,19 @@ export class walletService {
   }
 
   public create_wallet = () => {
-    function rng() { //Debug --- remove that to get new random wallet
-      return Buffer.from('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz')
+
+    if (!document.URL.startsWith('file:///')) {
+      function rng() { return Buffer.from('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz') }
+      this.ecpair = desire.ECPair.makeRandom({
+        network: this.network,
+        rng: rng
+      })
+    } else {
+      this.ecpair = desire.ECPair.makeRandom({
+        network: this.network
+      })
     }
 
-    this.ecpair = desire.ECPair.makeRandom({
-      network: this.network
-    })
 
     this.keys.private = this.ecpair.toWIF();
     this.keys.public = this.ecpair.getAddress();
@@ -189,9 +196,18 @@ export class walletService {
 
   }
 
-  public send_transaction = (rawtx, callback) => {
+  public send_transaction = (rawtx, amount, callback) => {
     this.wallet.blockchainTransaction_broadcast(rawtx, data => {
       console.log(data);
+      this.openHistory(() => {
+        this.addHistory("sent", amount, data.result, true);
+        this.addHistory("received", 0, data.result, false);
+        this.saveHistory();
+        setTimeout(() => {
+          this.update_history();
+        }, 500);
+
+      });
       callback(data.result);
     });
   }
@@ -209,9 +225,69 @@ export class walletService {
   //"tx_hash":25d1b3b5c1b95846d7c0c0a025af6d22c8aee50fd0fd5c1701e98e3c2d21f1ef
   //"height": 35925
   //"transaction": 0100000001aadcb477c9e7edb64f073a309c0f393d7951fb419547dccdccf8cce73523f536000000006a473044022065dafbb8fc1937eab7caf7a95757aef70a0116055efd685a5f4013da12aacca802205e803986c9475c1443e4c0a482af8619d99571e84809f2a2fa2bdc9f731d34f8012103e7cd2f9bce75a604ac67d5cb86f0383778e064af39ed82863ddc0aae16d0eddefeffffff02be850100000000001976a9149a6b60f74a6bae176df05c3b0a118f85bab5c58588ac6043993b000000001976a91479e9413015766e9078e1f85cb9834063d044ff9d88ac548c0000
+
+  historylist = [];
+  public openHistory = (callback => {
+    this.storage.get("history").then((history) => {
+      this.historylist = (history == null ? [] : history);
+      callback();
+    });
+  });
+
+  public saveHistory = (() => {
+    this.storage.set("history", this.historylist);
+  });
+
+  public addHistory = (type, value, txhash, showInHistory) => {
+    if (this.historylist == null) {
+      this.historylist = [];
+    }
+    this.historylist.push({
+      type: type,
+      value: this.NumberToDesire(value).toFixed(8),
+      timestamp: Date.now(),
+      txhash: txhash,
+      show: showInHistory
+    })
+
+  }
+
   public update_history = () => {
     this.histories = [];
     let that = this;
+
+    this.openHistory(() => {
+      this.wallet.blockchainAddress_listunspent(this.keys.public, (e) => {
+        if (e.result != null) {
+          var unspents = e.result;
+          var inputsList = [];
+          var inputVolume = 0;
+          var tx_size = 0;
+          console.log(unspents);
+          for (var j = 0; j < unspents.length; j++) {
+
+            var isInHistory = false;
+            for (var i = 0; i < that.historylist.length; i++) {
+              if (that.historylist[i].txhash == unspents[j].tx_hash) {
+                isInHistory = true;
+                break;
+              }
+            }
+            console.log(isInHistory + " | " + unspents[j].value);
+
+            if (!isInHistory) {
+              this.addHistory("received", unspents[j].value, unspents[j].tx_hash, true);
+            }
+          }
+          this.saveHistory();
+        };
+        that.histories = that.historylist;
+      });
+    });
+
+
+
+    /*
     this.wallet.blockchainAddress_getHistory(this.keys.public, data => {
       if (data.success) {
         var h = data.result;
@@ -275,18 +351,14 @@ export class walletService {
             }
 
           });
-          /*
-          
           console.log(that.histories);
-
-          */
-
         }
 
       } else {
         console.error(data.message);
       }
     })
+    */
   }
 
   public validAddress(address, callback) {

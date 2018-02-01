@@ -21,6 +21,7 @@ import { TCPServices } from '../../src/app/TCPServices';
 import { SortGridPipe } from '../../src/app/SortGridPipe';
 import { IonicStorageModule } from '@ionic/storage';
 import { Storage } from '@ionic/storage';
+import { SecureStorage, SecureStorageObject } from '@ionic-native/secure-storage';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 
@@ -61,6 +62,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
     walletService,
     ElectrumClientService,
     TCPServices,
+    SecureStorage,
     SortGridPipe,
     BarcodeScanner,
     { provide: ErrorHandler, useClass: IonicErrorHandler }

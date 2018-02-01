@@ -123,7 +123,7 @@ export class SendConfimrationPage {
   public transactionSize = 0;
   private transactionRaw = "";
   private listunspent = [];
-  constructor(private toastCtrl: ToastController, params: NavParams, public viewCtrl: ViewController, private storage: Storage, public wallet: walletService, public loadingCtrl: LoadingController) {
+  constructor(private toastCtrl: ToastController, private params: NavParams, public viewCtrl: ViewController, private storage: Storage, public wallet: walletService, public loadingCtrl: LoadingController) {
     this.payToAddress = params.get("payToAddress");
     this.payToAmount = (+params.get("payToAmount")).toFixed(8);
     this.payToFee = (+params.get("payToFee")).toFixed(8);
@@ -145,7 +145,11 @@ export class SendConfimrationPage {
   }
 
 
-
+  decimalToFullNumber(number) {
+    var result = parseInt((number * 100000000).toFixed(0))
+    console.log(result);
+    return result;
+  }
   gotoSendConfirmation() {
     let loading = this.loadingCtrl.create({
       content: "Sending transaction..."
@@ -154,8 +158,8 @@ export class SendConfimrationPage {
 
     var errorElement = document.getElementById("errorText2");
     errorElement.innerHTML = "";
-
-    this.wallet.send_transaction(this.transactionRaw, (ex) => {
+    var amount = this.decimalToFullNumber((+this.params.get("payToAmount")) + (+this.params.get("payToFee")));
+    this.wallet.send_transaction(this.transactionRaw, amount, (ex) => {
       console.log(ex);
       if (ex.indexOf("The") !== -1) {
         errorElement.innerHTML = "Transaction couldn't send:<br><br>" + ex.split("[")[0].replace("(", "<br>(");

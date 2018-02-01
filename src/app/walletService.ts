@@ -41,9 +41,7 @@ export class walletService {
         this.update_balance();
 
         setInterval(() => {
-          this.update_balance();
-          this.updateConvertPrice();
-          this.update_history();
+          this.updateOverall();
         }, 20000);
 
         this.wallet.blockchainAddress_listunspent(this.keys.public, (e) => {
@@ -63,8 +61,13 @@ export class walletService {
     })
   }
 
+  public updateOverall() {
+    this.update_balance();
+    this.updateConvertPrice();
+    this.update_history();
+  }
+
   public updateConvertPrice() {
-    this.convertCurrency = null;
     var headers = new Headers();
     headers.append("Accept", 'application/json');
     headers.append('Content-Type', 'application/json');
@@ -88,29 +91,42 @@ export class walletService {
     })
   }
 
-  public create_wallet = () => {
+  public create_wallet = (privateKey = null) => {
+    function rng() {
+      return Buffer.from('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+    }
 
-    if (!document.URL.startsWith('file:///')) {
-      function rng() { return Buffer.from('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz') }
-      this.ecpair = desire.ECPair.makeRandom({
-        network: this.network,
-        rng: rng
-      })
+    if (privateKey == null) {
+      if (!document.URL.startsWith('file:///')) {
+        this.ecpair = desire.ECPair.makeRandom({
+          network: this.network,
+          rng: rng
+        })
+      } else {
+        this.ecpair = desire.ECPair.makeRandom({
+          network: this.network
+        })
+      }
     } else {
-      this.ecpair = desire.ECPair.makeRandom({
-        network: this.network
-      })
+
+      try {
+        this.ecpair = desire.ECPair.fromWIF(privateKey, this.network);
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
     }
 
 
     this.keys.private = this.ecpair.toWIF();
     this.keys.public = this.ecpair.getAddress();
-
-    this.storage.set("privKey", this.keys.private);
-    this.storage.set("pubKey", this.keys.public);
+    console.log(this.keys.private + " | " + this.keys.public);
+    //  this.storage.set("privKey", this.keys.private);
+    // this.storage.set("pubKey", this.keys.public);
 
     console.log('Private Address: ' + this.keys.private)
     console.log('Public Address: ' + this.keys.public)
+    return true;
   }
 
   public make_transaction = (address, amount, fee, callback) => {
@@ -198,13 +214,12 @@ export class walletService {
 
   public send_transaction = (rawtx, amount, callback) => {
     this.wallet.blockchainTransaction_broadcast(rawtx, data => {
-      console.log(data);
       this.openHistory(() => {
         this.addHistory("sent", amount, data.result, true);
         this.addHistory("received", 0, data.result, false);
         this.saveHistory();
         setTimeout(() => {
-          this.update_history();
+          this.updateOverall();
         }, 500);
 
       });
@@ -253,36 +268,54 @@ export class walletService {
   }
 
   public update_history = () => {
-    this.histories = [];
     let that = this;
 
     this.openHistory(() => {
-      this.wallet.blockchainAddress_listunspent(this.keys.public, (e) => {
-        if (e.result != null) {
-          var unspents = e.result;
-          var inputsList = [];
-          var inputVolume = 0;
-          var tx_size = 0;
-          console.log(unspents);
-          for (var j = 0; j < unspents.length; j++) {
+      if (this.historylist.length <= 0) {
+        this.wallet.blockchainAddress_listunspent(this.keys.public, (e) => {
+          if (e.result != null) {
+            var unspents = e.result;
+            var amount = 0;
+            for (var j = 0; j < unspents.length; j++) {
+              this.addHistory("received", unspents[j].value, unspents[j].tx_hash, false);
+              amount += unspents[j].value;
+            };
 
-            var isInHistory = false;
-            for (var i = 0; i < that.historylist.length; i++) {
-              if (that.historylist[i].txhash == unspents[j].tx_hash) {
-                isInHistory = true;
-                break;
+            this.addHistory("start", amount, null, true);
+            this.saveHistory();
+            that.histories = that.historylist;
+          };
+        });
+      } else {
+        this.wallet.blockchainAddress_listunspent(this.keys.public, (e) => {
+          if (e.result != null) {
+            var unspents = e.result;
+            var inputsList = [];
+            var inputVolume = 0;
+            var tx_size = 0;
+            console.log(unspents);
+            for (var j = 0; j < unspents.length; j++) {
+
+              var isInHistory = false;
+              for (var i = 0; i < that.historylist.length; i++) {
+                if (that.historylist[i].txhash == unspents[j].tx_hash) {
+                  isInHistory = true;
+                  break;
+                }
+              }
+              console.log(isInHistory + " | " + unspents[j].value);
+
+              if (!isInHistory) {
+                this.addHistory("received", unspents[j].value, unspents[j].tx_hash, true);
               }
             }
-            console.log(isInHistory + " | " + unspents[j].value);
+            this.saveHistory();
+          };
+          that.histories = that.historylist;
+        });
+      }
 
-            if (!isInHistory) {
-              this.addHistory("received", unspents[j].value, unspents[j].tx_hash, true);
-            }
-          }
-          this.saveHistory();
-        };
-        that.histories = that.historylist;
-      });
+
     });
 
 

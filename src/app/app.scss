@@ -46,11 +46,23 @@ body {
 
 .alert-md .alert-wrapper {
   background-color: var(--secondary-color);
-  height: 300px;
+}
+
+.alert-md .alert-message {
+  overflow: hidden;
 }
 
 .alert-md .alert-button {
   color: var(--base-color);
+}
+
+.alert-md .alert-input {
+  border-bottom: 1px solid #dedede;
+  color: white;
+}
+
+.alert-md .alert-input:focus {
+  border-bottom: 2px solid var(--base-color);
 }
 
 .alert-md .alert-message,

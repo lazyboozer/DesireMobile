@@ -17,11 +17,19 @@ export class HomePage {
 
   }
 
-  openUrl() {
+  public openUrl() {
     var url = "https://altmix.org/coins/13-Desire/explorer/address/";
     this.storage.get("pubKey").then((pub) => {
       window.open(url + pub);
     });
+  }
+
+  public openBlockchainWebsite(txhash) {
+    if (txhash != null) {
+      var url = "https://altmix.org/coins/13-Desire/explorer/transaction/";
+      window.open(url + txhash);
+    }
+
   }
 
   public getConvertedCurrency() {

@@ -17,7 +17,7 @@
       <ion-toggle class="purpleToggle" checked="false"></ion-toggle>
     </ion-item>
   -->
-    <button class="item-md-addpadding" ion-item style="width: 99%" (click)="clearCache()">Clear Cache</button>
+    <button class="item-md-addpadding" ion-item style="width: 99%" (click)="clearCache()">Clear Cache/History</button>
     <ion-list-header>
       Wallet
     </ion-list-header>
@@ -32,7 +32,7 @@
     </ion-item>
     <button class="item-md-addpadding" ion-item style="width: 99%" (click)="showKeys()">Show Private Address
     </button>
-    <button class="item-md-addpadding" ion-item style="width: 99%" disabled>Import Private Address
+    <button class="item-md-addpadding" ion-item style="width: 99%" (click)="importKeys()">Import Private Address
     </button>
 
 

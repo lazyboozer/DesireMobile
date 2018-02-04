@@ -1,18 +1,31 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { stringify } from '@angular/compiler/src/util';
-
+import 'rxjs/add/operator/retry';
+import 'rxjs/add/operator/timeout';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class ElectrumClientService {
-  public host;
-  public port;
+  public host = {
+    index: -1,
+    list: [
+      "http://35.185.122.226:50003",
+      "http://35.205.214.124:50003"
+    ]
+  };
+
+  public timeoutTime = 1500;
+
 
   constructor(public http: Http) {
-
+    if (this.host.index == -1) {
+      this.host.index = Math.floor((Math.random() * this.host.list.length));
+    }
   }
 
-  request = (method, params, callback) => {
+  request = (method, params, callback, index = -1) => {
     var data = {
       method: method,
       params: params
@@ -24,11 +37,30 @@ export class ElectrumClientService {
     headers.append("Access-Control-Allow-Origin", "*");
     let options = new RequestOptions({ headers: headers });
 
-    this.http.post('http://35.185.122.226:50003', data, options).subscribe(data => {
-      var result: any;
-      result = data;
-      callback(JSON.parse(result._body));
-    })
+    if (index == -1) {
+      index = this.host.index;
+    }
+    console.log(index);
+
+    var retry = () => {
+      index = (index + 1) % this.host.list.length;
+      console.error("Server error, gonna try new index: " + index);
+      this.request(method, params, callback, index);
+    }
+
+    this.http.post(this.host.list[index], data, options)
+      .timeout(this.timeoutTime)
+      .subscribe(data => {
+        console.log("DATA: " + data);
+        this.host.index = index;
+        var result: any;
+        result = data;
+
+        callback(JSON.parse(result._body));
+      }, error => {
+        retry();
+      })
+
   }
 
   requestBlockchain = (method, data, callback) => {

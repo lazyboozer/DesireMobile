@@ -121,8 +121,8 @@ export class walletService {
     this.keys.private = this.ecpair.toWIF();
     this.keys.public = this.ecpair.getAddress();
     console.log(this.keys.private + " | " + this.keys.public);
-    //  this.storage.set("privKey", this.keys.private);
-    // this.storage.set("pubKey", this.keys.public);
+    this.storage.set("privKey", this.keys.private);
+    this.storage.set("pubKey", this.keys.public);
 
     console.log('Private Address: ' + this.keys.private)
     console.log('Public Address: ' + this.keys.public)

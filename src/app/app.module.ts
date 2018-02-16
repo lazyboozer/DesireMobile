@@ -42,7 +42,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
     BrowserModule,
     HttpModule,
     IonicStorageModule.forRoot(),
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp, { mode: 'md' })
   ],
   bootstrap: [IonicApp],
   entryComponents: [

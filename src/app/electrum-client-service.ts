@@ -16,7 +16,7 @@ export class ElectrumClientService {
     ]
   };
 
-  public timeoutTime = 1500;
+  public timeoutTime = 5000;
 
 
   constructor(public http: Http) {

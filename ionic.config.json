@@ -1,15 +1,18 @@
 {
   "name": "DesireWallet",
-  "app_id": "",
+  "app_id": "c8581756",
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}
   },
-  "proxies": [{
-    "path": "/blockchain",
-    "proxyUrl": "http://desire.thecryptochat.net/api_fetch.php"
-  }, {
-    "path": "/convertPrice",
-    "proxyUrl": "https://api.coinmarketcap.com/v1/ticker/desire/"
-  }]
+  "proxies": [
+    {
+      "path": "/blockchain",
+      "proxyUrl": "http://desire.thecryptochat.net/api_fetch.php"
+    },
+    {
+      "path": "/convertPrice",
+      "proxyUrl": "https://api.coinmarketcap.com/v1/ticker/desire/"
+    }
+  ]
 }

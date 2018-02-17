@@ -29,14 +29,3 @@ page-about {}
   margin-top: 5px;
   color: var(--white-color);
 }
-
-.scroll-content {
-  overflow-y: hidden;
-}
-
-.buttonFixedWrapper {
-  width: 100%;
-  position: fixed;
-  bottom: 0;
-  transform: translateY(-60px);
-}

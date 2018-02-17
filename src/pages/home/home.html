@@ -1,21 +1,27 @@
-<ion-content padding>
-  <div *ngIf="wallet != null">
-    <div id="balanceShow">
-      <div class="hugeCenterText">
-        <div class="vertical">
-          <span>
-            <span>{{wallet.balance}}</span> DSR
-          </span>
-          <span style="font-size: 0.5em; padding:0px; margin: 0px;">
-            <span>{{getConvertedCurrency()}}</span> {{wallet.convertCurrencySymbol}}</span>
+<ion-header>
+  <ion-navbar>
+    <div *ngIf="wallet != null" style="color: white;">
+      <div id="balanceShow">
+        <div class="hugeCenterText">
+          <div class="vertical">
+            <span>
+              <span>{{wallet.balance}}</span> DSR
+            </span>
+            <span style="font-size: 0.5em; padding:0px; margin: 0px;">
+              <span>{{getConvertedCurrency()}}</span> {{wallet.convertCurrencySymbol}}</span>
 
+          </div>
         </div>
-
-
       </div>
     </div>
+  </ion-navbar>
+</ion-header>
 
+<ion-content padding>
+
+  <div *ngIf="wallet != null">
     <div id="transactionShow" *ngIf="wallet.histories != null">
+
       <ion-list>
         <ng-container *ngFor="let history of wallet.histories | sortgrid: '-timestamp'">
           <button ion-item class="item-md-addpadding" *ngIf="history.show" (click)="openBlockchainWebsite(history.txhash)">
@@ -44,26 +50,9 @@
         <div style="padding: 10px !important; text-align: center;">
           <button no-margin ion-button color="purple" style="width: 100%;" outline (click)="openUrl()">Open in Blockchain Explorer</button>
         </div>
-        <!--
-        <ion-item>
-          <div class="horizontal">
-            <div class="transactionInfo">
-              <div class="vertical">
-                <div class="transactionInfoDate">
-                  October 12
-                </div>
-                <div class="transactionInfoType">
-                  Received
-                </div>
-              </div>
-            </div>
-            <div class="transactionAmount">
-              0.00013482 DSR
-            </div>
-          </div>
-        </ion-item>
-      -->
       </ion-list>
+
+
     </div>
   </div>
 

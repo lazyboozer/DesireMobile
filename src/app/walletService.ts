@@ -93,20 +93,13 @@ export class walletService {
 
   public create_wallet = (privateKey = null) => {
     function rng() {
-      return Buffer.from('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+      //return Buffer.from('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
     }
 
     if (privateKey == null) {
-      if (!document.URL.startsWith('file:///')) {
-        this.ecpair = desire.ECPair.makeRandom({
-          network: this.network,
-          rng: rng
-        })
-      } else {
-        this.ecpair = desire.ECPair.makeRandom({
-          network: this.network
-        })
-      }
+      this.ecpair = desire.ECPair.makeRandom({
+        network: this.network
+      })
     } else {
 
       try {

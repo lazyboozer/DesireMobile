@@ -88,6 +88,7 @@
     <plugin name="cz.blocshop.socketsforcordova" spec="^1.1.0" />
     <plugin name="cordova-sqlite-storage" spec="^2.1.4" />
     <plugin name="phonegap-plugin-barcodescanner" spec="^7.0.0" />
-    <engine name="android" spec="6.4.0" />
     <plugin name="cordova-plugin-secure-storage" spec="^2.6.8" />
+    <engine name="android" spec="6.4.0" />
+    <engine name="ios" spec="4.5.4" />
 </widget>

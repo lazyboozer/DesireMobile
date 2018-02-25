@@ -10,7 +10,7 @@ And then you are done. By using
 you can see the app on browser for debugging stuffs.
 
 ## How to build wallet for iOS
-Apple rejected this app to be at app store, because desire is not on their approved cryptocurrency. Apple only allow those crypto app on their App Store:
+Apple rejected this app to be at app store, because desire is not on their approved cryptocurrencies. Apple only allow those crypto app on their App Store:
 
 - Bitcoin
 - Dogecoin

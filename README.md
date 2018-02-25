@@ -10,7 +10,21 @@ And then you are done. By using
 you can see the app on browser for debugging stuffs.
 
 ## How to build wallet for iOS
-Apple rejected this app to be at app store, so there is another way to put wallet on iOS, this is how you can put your desire wallet app on iOS devices.
+Apple rejected this app to be at app store, because desire is not on their approved cryptocurrency. Apple only allow those crypto app on their App Store:
+
+- Bitcoin
+- Dogecoin
+- DAO
+- Digicash
+- Ethereum
+- Ethereum Classic
+- Litecoin
+- Lisk
+- Monero
+- Ripple
+- Steem
+
+so there is another way to put wallet on iOS, this is how you can put your desire wallet app on iOS devices.
 You need macOS to compile iOS App.
 
 ### Step 1

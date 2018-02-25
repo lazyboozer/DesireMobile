@@ -42,4 +42,5 @@ This step is only necessary when you're working on this app.
 
 Testing on Android is much easier and faster. To test on the device, simply plug it in, and run
 `ionic cordova run android`
-If this doesn’t work, make sure you have USB debugging enabled on your device, as described on the Android developer site.
+If this doesn’t work, make sure you have USB debugging enabled on your device, as described on the Android developer site:
+https://developer.android.com/studio/run/device.html

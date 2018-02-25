@@ -12,7 +12,7 @@ export class ElectrumClientService {
     index: -1,
     list: [
       "http://35.185.122.226:50003",
-      "http://35.205.214.124:50003"
+      "http://35.196.94.57:50003"
     ]
   };
 

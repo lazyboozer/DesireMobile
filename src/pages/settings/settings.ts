@@ -28,7 +28,7 @@ export class SettingsPage {
   importKeys() {
     let alert = this.alertCtrl.create({
       title: "Warning",
-      message: "This will remove the currently desire balance if you import a new private address. If you want to keep this balance, please write down your private key from <b>\"Show Private Address\"</b>.<br>Please enter <b>\"Confirm\"</b> input box <b>\"yes\"</b> if you want to replace the currently private address.",
+      message: "This will remove the current desire balance if you import a new private address. If you want to keep this balance, please write down your private key from <b>\"Show Private Address\"</b>.<br>Please enter <b>\"Yes\"</b> in the confirm input box if you want to replace the current private address.",
       inputs: [
         {
           name: 'address',
